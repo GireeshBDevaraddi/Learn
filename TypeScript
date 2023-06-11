@@ -1,0 +1,385 @@
+Initialise the Project with below Commands.
+
+	-> npm install -g typescript
+-> npm init
+-> npm install --save-dev lite-server
+- add start value as lite-server under scripts in the package.json
+-> npm start
+-> use tsc to transpile the typescript to Javascript
+	tsc app.ts
+	tsc --noEmitOnError app.ts
+	
+
+------------------------------
+Core Types of Type-Script
+------------------------------
+
+1. number
+2. string
+3. boolean
+4. arrays, [] | Array<number>
+5. any
+6. function, Function
+7. object, {}, object : { name: string, place?: string}
+8. union types, 
+let union: name | string
+9. type, 
+type user : string;
+10. interface
+11. type assertion
+12. literal types
+13. null and undefined. 
+- used to signal absent or uninitialized value
+14. enums
+15. bigint, BigInt(100)  
+let NumBer = BigInt(100)
+let bigNumber : bigint = 100n;
+16. symbol, Symbol("name")
+
+
+→ Number : 
+As in JavaScript, all numbers in TypeScript are either floating point values or BigIntegers. These floating point numbers get the type number, while BigIntegers get the type bigint. In addition to hexadecimal and decimal literals, TypeScript also supports binary and octal literals introduced in ECMAScript 2015.
+    let decimal: number = 6;
+    let hex: number = 0xf00d;
+    let binary: number = 0b1010;
+    let octal: number = 0o744;
+    let big: bigint = 100n;
+
+→ String : 
+Another fundamental part of creating programs in JavaScript for web pages and servers alike is working with textual data. As in other languages, we use the type string to refer to these textual data types. Just like JavaScript, TypeScript also uses double quotes (") or single quotes (') to surround string data.You can also use template strings, which can span multiple lines and have embedded expressions. These strings are surrounded by the backtick/backquote (`) character, and embedded expressions are of the form ${ expr }.
+    	let color: string = "blue";
+	color = 'red';
+    	let fullName: string = `Bob Bobbington`;
+	let age: number = 37;
+	let sentence: string = `Hello, my name is ${fullName}.
+	I'll be ${age + 1} years old next month.`;
+
+	This is equivalent to declaring sentence like so:
+	let sentence: string ="Hello, my name is “ + fullName + ".\n\n" + "I'll be " + (age + 1) + " years old next month.";
+
+→ Boolean : 
+The most basic data type is the simple true/false value, which JavaScript and TypeScript call a boolean value.
+			let isDone: boolean = false;
+→ Object  : 
+Object is a type that represents the non-primitive type, i.e. anything that is not number, string, boolean, bigint, symbol, null, or undefined.
+With object type, APIs like Object.create can be better represented. For example:
+			declare function create(o: object | null): void;
+// OK
+	create({ prop: 0 });
+	create(null);
+	create(undefined); // with `--strictNullChecks` flag enabled, undefined is not a subtype of null
+	 – Argument of type 'undefined' is not assignable to parameter of type 'object | null'.
+	 
+	create(42);
+	 – Arguments of type 'number' are not assignable to parameters of type 'object'.
+
+	create("string");
+	 – Arguments of type 'string' are not assignable to parameters of type 'object'.
+    
+	create(false);
+	 – Argument of type 'boolean' is not assignable to parameter of type 'object'
+
+Of course object types can also be created for nested objects.
+Let's say you have this JavaScript object:
+    	const product = {
+        	id: 'abc1',
+        	price: 12.99,
+        	tags: ['great-offer', 'hot-and-new'],
+        	details: {
+            	title: 'Red Carpet',
+            	description: 'A great carpet - almost brand-new!'
+        	}
+    	}
+This would be the type of such an object:
+    	{
+        	id: string;
+        	price: number;
+        	tags: string[];
+        	details: {
+            	title: string;
+            	description: string;
+        	}
+    	}
+So you have an object type in an object type so to say.
+Object types can also specify that some or all of their properties are optional. To do this, add a ? after the property name like (id ?: string)
+    
+→ Array   : 
+TypeScript, like JavaScript, allows you to work with arrays of values. Array types can be written in one of two ways. In the first, you use the type of the elements followed by [] to denote an array of that element type:
+let list: number[] = [1, 2, 3];
+
+The second way uses a generic array type, Array<elemType>:
+			let list: Array<number> = [1, 2, 3];
+
+→ Tuple  : 
+Tuple types allow you to express an array with a fixed number of elements whose types are known, but need not be the same. For example, you may want to represent a value as a pair of a string and a number:
+        		// Declare a tuple type
+        			let x: [string, number];
+        		// Initialize it
+        			x = ["hello", 10]; // OK
+        		// Initialize it incorrectly
+        			x = [10, "hello"]; // Error
+
+When accessing an element with a known index, the correct type is retrieved:
+    			// OK
+    			console.log(x[0].substring(1));
+    			console.log(x[1].substring(1));
+ – Property 'substring' does not exist on type 'number'.
+
+Accessing an element outside the set of known indices fails with an error:
+    			x[3] = "world";
+    			– Tuple type '[string, number]' of length '2' has no element at index '3'.
+    			– Tuple type '[string, number]' of length '2' has no element at index '3'.
+    			console.log(x[5].toString());
+    			– Object is possibly 'undefined'.
+    			– Tuple type '[string, number]' of length '2' has no element at index '5'.
+
+	→ Enum : 
+A helpful addition to the standard set of datatypes from JavaScript is the enum. As in languages like C#, an enum is a way of giving more friendly names to sets of numeric values. By default, enums begin numbering their members starting at 0. You can change this by manually setting the value of one of its members. For example, we can start the previous example at 1 instead of 0:
+	enum Color {
+     	Red,
+     	Green,
+     	Blue,
+	}
+				let c: Color = Color.Green;
+
+By default, enums begin numbering their members starting at 0. You can change this by manually setting the value of one of its members. For example, we can start the previous example at 1 instead of 0:
+	enum Color {
+     	Red = 1,
+     	Green,
+     	Blue,
+	}
+	let c: Color = Color.Green;
+
+Or, even manually set all the values in the enum:
+	enum Color {
+        Red = 1,
+	   Green = 2,
+        Blue = 4,
+     }
+    let c: Color = Color.Green;
+
+A handy feature of enums is that you can also go from a numeric value to the name of that value in the enum. For example, if we had the
+value 2 but weren’t sure what that mapped to in the Color enum above, we could look up the corresponding name
+	enum Color {
+     	Red = 1,
+     	Green,
+     	Blue,
+	}
+	let colorName: string = Color[2];
+ 
+	// Displays 'Green'
+	console.log(colorName);
+
+→ Any : 
+In some situations, not all type information is available or its declaration would take an inappropriate amount of effort. These may occur for values from code that has been written without TypeScript or a 3rd party library. In these cases, we might want to opt-out of type checking. To do so, we label these values with the any type:
+  	declare function getValue(key: string): any;
+    	// OK, return value of 'getValue' is not checked
+    	const str: string = getValue("myString");
+
+The any type is a powerful way to work with existing JavaScript, allowing you to gradually opt-in and opt-out of type checking during compilation.Unlike unknown, variables of type any allow you to access arbitrary properties, even ones that don’t exist. These properties include functions and TypeScript will not check their existence or type:
+
+    	let looselyTyped: any = 4;
+    	// OK, ifItExists might exist at runtime
+    	looselyTyped.ifItExists();
+    	// OK, toFixed exists (but the compiler doesn't check)
+    	looselyTyped.toFixed();
+ 
+    	let strictlyTyped: unknown = 4;
+    	strictlyTyped.toFixed();
+    	– Object is of type 'unknown'.
+
+The any will continue to propagate through your objects:
+    	let looselyTyped: any = {};
+    	let d = looselyTyped.a.b.c.d;
+   
+    	let d: any
+
+After all, remember that all the convenience of any comes at the cost of losing type safety. Type safety is one of the main motivations for using TypeScript and you should try to avoid using any when not necessary.
+
+→ Undefined or Null : 
+In TypeScript, both undefined and null actually have their types named undefined and null respectively. Much like void, they’re not extremely useful on their own:
+	// Not much else we can assign to these variables!
+	let u: undefined = undefined;
+	let n: null = null;
+
+By default null and undefined are subtypes of all other types. That means you can assign null and undefined to something like number. However, when using the strictNullChecks flag, null and undefined are only assignable to unknown, any and their respective types (the one exception being that undefined is also assignable to void). This helps avoid many common errors. In cases where you want to pass in either a string or null or undefined, you can use the union type string | null | undefined.
+  
+→ Function :  
+Functions are the primary means of passing data around in JavaScript. TypeScript allows you to specify the types of both the input and output values of functions. When you declare a function, you can add type annotations after each parameter to declare what types of parameters the function accepts. Parameter type annotations go after the parameter name
+  			function greet(name: string) {
+     		 	console.log("Hello, " + name.toUpperCase() + "!!");
+   	  		}
+
+You can also add return type annotations. Return type annotations appear after the parameter list
+   	     	function getFavoriteNumber(): number {
+		return 26;
+   	}
+
+Anonymous functions are a little bit different from function declarations. When a function appears in a place where TypeScript can determine how it’s going to be called, the parameters of that function are automatically given types
+	function add(a: number, b: number) : number {
+    		return a+b;
+	}
+
+	let combineValues: Function;
+	let combinValues: (a:number, b:number) => number;
+	combineValues = add
+
+→ Void	: 
+void is a little like the opposite of any: the absence of having any type at all. You may commonly see this as the return type of functions that do not return a value:
+	function warnUser(): void {
+  		console.log("This is my warning message");
+	}
+Declaring variables of type void is not useful because you can only assign null (only if strictNullChecks is not specified, see next section) or undefined to them:
+	let unusable: void = undefined;
+	// OK if `--strictNullChecks` is not given
+	unusable = null;
+ 
+→ Unknown : 
+We may need to describe the type of variables that we do not know when we are writing an application. These values may come from dynamic content – e.g. from the user – or we may want to intentionally accept all values in our API. In these cases, we want to provide a type that tells the compiler and future readers that this variable could be anything, so we give it the unknown type.
+ 	let notSure: unknown = 4;
+	notSure = "maybe a string instead";
+ 
+	// OK, definitely a boolean
+	notSure = false;
+
+If you have a variable with an unknown type, you can narrow it to something more specific by doing typeof checks, comparison checks, or more advanced type guards that will be discussed in a later chapter:
+		declare const maybe: unknown;
+			// 'maybe' could be a string, object, boolean, undefined, or other types
+
+	const aNumber: number = maybe;
+	Type 'unknown' is not assignable to type 'number'.
+	 
+	if (maybe === true) {
+  	// TypeScript knows that maybe is a boolean now
+  		const aBoolean: boolean = maybe;
+  	// So, it cannot be a string
+  		const aString: string = maybe;
+	Type 'boolean' is not assignable to type 'string'.
+	}
+ 
+	if (typeof maybe === "string") {
+  	// TypeScript knows that maybe is a string
+  	const aString: string = maybe;
+  	// So, it cannot be a boolean
+  	const aBoolean: boolean = maybe;
+	Type 'string' is not assignable to type 'boolean'.
+	}
+
+→ Never : 
+The never type represents the type of values that never occur. For instance, never is the return type for a function expression or an arrow function expression that always throws an exception or one that never returns. Variables also acquire the type never when narrowed by any type guards that can never be true.
+The never type is a subtype of, and assignable to, every type; however, no type is a subtype of, or assignable to, never (except never itself). Even any isn’t assignable to never.
+	Some examples of functions returning never:
+	// Function returning never must not have a reachable end point
+	function error(message: string): never {
+  		throw new Error(message);
+	}
+	 
+	// Inferred return type is never
+	function fail() {
+  		return error("Something failed");
+	}
+	 
+	// Function returning never must not have a reachable end point
+	function infiniteLoop(): never {
+  		while (true) {}
+	}
+
+→ Type assertions : 
+Sometimes you’ll end up in a situation where you’ll know more about a value than TypeScript does. Usually, this will happen when you know the type of some entity could be more specific than its current type.
+Type assertions are a way to tell the compiler “trust me, I know what I’m doing.” A type assertion is like a type cast in other languages, but it performs no special checking or restructuring of data. It has no runtime impact and is used purely by the compiler. TypeScript assumes that you, the programmer, have performed any special checks that you need.
+
+Type assertions have two forms.
+One is the as-syntax:
+				let someValue: unknown = "this is a string";
+				let strLength: number = (someValue as string).length;
+The other version is the “angle-bracket” syntax:
+				let someValue: unknown = "this is a string";
+	 			let strLength: number = (<string>someValue).length;
+
+The two samples are equivalent. Using one over the other is mostly a choice of preference; however, when using TypeScript with JSX, only as-style assertions are allowed.
+TypeScript only allows type assertions which convert to a more specific or less specific version of a type. This rule prevents “impossible” coercions like:
+    			const x = "hello" as number;
+Sometimes this rule can be too conservative and will disallow more complex coercions that might be valid. If this happens, you can use two assertions, first to any (or unknown, which we’ll introduce later), then to the desired type:
+    			const a = (expr as any) as T;
+
+→ If you use const, the value remains same and can not be changed, In order to have create variable use keyword let
+→ We can assign unknown type variable to the any type of variable but we cannot do it in reverse until we check the type using type check - typeof.
+→ We use type to create aliases for the core types ex - below. we can use that alias to refer union of number and string
+	type combinable = number | string
+→ Type aliases can be used to "create" your own types. You're not limited to storing union types though - you can also provide an alias to a (possibly complex) object type.
+For example:
+	type User = { name: string; age: number };
+	const u1: User = { name: 'Max', age: 30 }; // this works!
+→ This allows you to avoid unnecessary repetition and manage types centrally.
+For example, you can simplify this code:
+	function greet(user: { name: string; age: number }) {
+    		console.log('Hi, I am ' + user.name);
+	}
+ 
+	function isOlder(user: { name: string; age: number }, checkAge: number) {
+    		return checkAge > user.age;
+	}
+To:
+		type User = { name: string; age: number };
+		function greet(user: User) {
+    			console.log('Hi, I am ' + user.name);
+		}
+ 		function isOlder(user: User, checkAge: number) {
+    			return checkAge > user.age;
+		}
+
+ → The as const suffix acts like const but for the type system, ensuring that all properties are assigned the literal type. it is read only if
+ → Interface
+	- An interface declaration is another way to name an object type:
+- Type aliases and interfaces are very similar, and in many cases you can choose between them freely. Almost all features of an interface are available in type, the key distinction is that a type cannot be reopened to add new properties vs an interface which is always extendable.
+
+------------------
+	NARROWING
+------------------
+→ typeof 
+- type guards
+- As we’ve seen, JavaScript supports a typeof operator which can give very basic information about the type of values we have at runtime. TypeScript expects   this to return a certain set of strings:
+	"string"
+	"number"
+	"bigint"
+	"boolean"
+	"symbol"
+	"undefined"
+	"object"
+	"Function”
+- Truthiness narrowing
+- Equality narrowing
+	- TypeScript also uses switch statements and equality checks like ===, !==, ==, and  != to narrow types.
+- The in operator narrowing
+- JavaScript has an operator for determining if an object has a property with a name: the in operator. TypeScript takes this into account as a way to narrow down potential types
+     - instanceof narrowing
+- JavaScript has an operator for checking whether or not a value is an “instance” of another value. More specifically, in JavaScript x instanceof Foo checks whether the prototype chain of x contains Foo.prototype. While we won’t dive deep here, and you’ll see more of this when we get into classes, they can still be useful for most values that can be constructed with new. As you might have guessed, instanceof is also a type guard, and TypeScript narrows in branches guarded by instanceof
+→ Type Predicates
+	- To define a user-defined type guard, we simply need to define a function whose return type is a type predicate:
+   	 	function isFish(pet: Fish | Bird): pet is Fish {
+     		 return (pet as Fish).swim !== undefined;
+   	 	}
+pet is Fish is our type predicate in this example. A predicate takes the form parameterName is Type, where parameterName must be the name of a parameter from the current function signature.
+→ Discriminated Unions -> type Shape = Circle | Square;
+→ The never Type  
+When narrowing, you can reduce the options of a union to a point where you have removed all possibilities and have nothing left. In those cases, TypeScript will use a never type to represent a state which shouldn’t exist.
+
+→ Control Flow Analysis
+
+→ Class 
+	
+→ Interface
+	
+→ Types
+	
+-> Reference:
+	 
+	- tsconfig.json handbook --> https://www.typescriptlang.org/docs/handbook/tsconfig-json.html
+  - Compiler options  	--> https://www.typescriptlang.org/docs/handbook/compiler-options.html
+  - vs-code debugging 	--> https://code.visualstudio.com/docs/typescript/typescript-debugging
+  - Typescript Handbook  	—-> https://www.typescriptlang.org/docs/handbook/intro.html
+
+--- Same File is on https://docs.google.com/document/d/13IjvIBWN9C1L20ccwNIWKe-iLJu_NiFJXVlTP3Ujdi4/edit
+
+
+
