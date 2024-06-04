@@ -19,5 +19,42 @@
 	- An action can pull your git repository from GitHub, set up the correct toolchain for your build environment, or set up the authentication to your cloud provider. You can write your own actions, or you can find actions to use in your workflows in the GitHub Marketplace.
 5. **What is Runner?**
 	- A runner is a server that runs your workflows when they're triggered. Each runner can run a single job at a time. each workflow run executes in a fresh, newly-provisioned virtual machine
-#
+
+# Expressions
+- Use expressions to programmatically set environment variables in workflow files and access contexts. An expression can be any combination of literal values, references to a context, or functions. You can combine literals, context references, and functions using operators
+- You need to use specific syntax to tell GitHub to evaluate an expression rather than treat it as a string. `${{ <expression> }}`
+- Note that in conditionals, falsy values (false, 0, -0, "", '', null) are coerced to false and truthy (true and other non-falsy values) are coerced to true.
+> - GitHub ignores case when comparing strings.
+> - For numerical comparison, the `fromJSON()` function can be used to convert a string to a number.
+> - GitHub performs loose equality comparisons
+> - If the types do not match, GitHub coerces the type to a number. GitHub casts data types to a number
+> - When NaN is one of the operands of any relational comparison (>, <, >=, <=), the result is always false
+> - Objects and arrays are only considered equal when they are the same instance
+ <img width="720" alt="image" src="https://github.com/GireeshBDevaraddi/Learn/assets/135546164/e5311596-91bd-4472-9e0a-86f9f0ff6bbe">
+
+# Functions
+- GitHub offers a set of built-in functions that you can use in expressions. Some functions cast values to a string to perform comparisons
+1. `contains( search, item )`
+2. `startsWith( searchString, searchValue )`
+3. `endsWith( searchString, searchValue )`
+4. `format( string, replaceValue0, replaceValue1, ..., replaceValueN)`
+    <img width="718" alt="image" src="https://github.com/GireeshBDevaraddi/Learn/assets/135546164/b8f52b86-4beb-411d-83f2-eb6cdd866e0c">
+5. `join( array, optionalSeparator )`
+6. `fromJSON(value)`
+7. `hashFiles(path)`
+
+## Status Check Functions
+- Use status check functions as expressions in if conditionals. A default status check of `success()` is applied unless you include one of these functions
+1. `success()`
+   - Returns `true` when all previous steps have succeeded.
+2. `always()`
+   - Causes the step to always execute, and returns `true`, even when canceled. The always expression is best used at the step level or on tasks that you expect to run even when a job is canceled
+3. `cancelled()`
+   - Returns `true` if the workflow was canceled.
+4. `failure()`
+   - Returns `true` when any previous step of a job fails. If you have a chain of dependent jobs, `failure()` returns `true` if any ancestor job fails.
+
+- You can use the `*` syntax to apply a filter and select matching items in a collection.
+
+
 
