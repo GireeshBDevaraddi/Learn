@@ -56,5 +56,62 @@
 
 - You can use the `*` syntax to apply a filter and select matching items in a collection.
 
+## Contexts
+- Contexts are a way to access information about workflow runs, variables, runner environments, jobs, and steps. Each context is an object that contains properties, which can be strings or other objects.
+- You can access contexts using the expression syntax `${{ <context> }}`
+ 1. `github` context
+    - The github context contains information about the workflow run and the event that triggered the run. You can also read most of the github context data in environment variables
+    - [Github Context](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context)
+   
+ 2. `env` context
+    - The env context contains variables that have been set in a workflow, job, or step. It does not contain variables inherited by the runner process
+    - You can retrieve the values of variables stored in `env` context and use these values in your workflow file. You can use the `env` context in any key in a workflow step except for the `id` and `uses` keys
+    - [env Context](https://docs.github.com/en/actions/learn-github-actions/contexts#env-context)
+   
+ 3. `vars` context
+    - The vars context contains custom configuration variables set at the organization, repository, and environment levels
+    - If a configuration variable has not been set, the return value of a context referencing the variable will be an empty string.
+    - [vars context](https://docs.github.com/en/actions/learn-github-actions/contexts#vars-context)
+      
+4. `job` context
+   - The job context contains information about the currently running job.
+   - [job context](https://docs.github.com/en/actions/learn-github-actions/contexts#job-context)
 
+5. `jobs` context
+   - The jobs context is only available in reusable workflows, and can only be used to set outputs for a reusable workflow
+   - [jobs context](https://docs.github.com/en/actions/learn-github-actions/contexts#jobs-context)
+
+6. `steps` context
+   - The steps context contains information about the steps in the current job that have an id specified and have already run
+   - [steps context](https://docs.github.com/en/actions/learn-github-actions/contexts#steps-context)
+  
+7. `runner` context
+   - The runner context contains information about the runner that is executing the current job
+   - [runner context](https://docs.github.com/en/actions/learn-github-actions/contexts#runner-context)
+  
+8. `secrets` context
+   - The secrets context contains the names and values of secrets that are available to a workflow run.
+   - The secrets context is not available for composite actions due to security reasons. If you want to pass a secret to a composite action, you need to do it explicitly as an input
+   - `GITHUB_TOKEN` is a secret that is automatically created for every workflow run, and is always included in the `secrets` context
+   - [secrets context](https://docs.github.com/en/actions/learn-github-actions/contexts#secrets-context)
+  
+9. `strategy` context
+   - For workflows with a matrix, the strategy context contains information about the matrix execution strategy for the current job
+   - [strategy context](https://docs.github.com/en/actions/learn-github-actions/contexts#strategy-context)
+
+10. `matrix` context
+    - For workflows with a matrix, the matrix context contains the matrix properties defined in the workflow file that apply to the current job
+    - There are no standard properties in the matrix context, only those which are defined in the workflow file
+    - [matrix context](https://docs.github.com/en/actions/learn-github-actions/contexts#matrix-context)
+
+11. `needs` context
+    - The needs context contains outputs from all jobs that are defined as a direct dependency of the current job. Note that this doesn't include implicitly dependent jobs (for example, dependent jobs of a dependent job)
+    - [needs context](https://docs.github.com/en/actions/learn-github-actions/contexts#needs-context)
+
+12. `inputs` context
+    - The inputs context contains input properties passed to an action, to a reusable workflow, or to a manually triggered workflow.
+    -  For reusable workflows, the input names and types are defined in the `workflow_call` event configuration of a reusable workflow, and the input values are passed from `jobs.<job_id>.with` in an external workflow that calls the reusable workflow
+    -  For manually triggered workflows, the inputs are defined in the `workflow_dispatch` event configuration of a workflow.
+    -  The properties in the inputs context are defined in the workflow file. They are only available in a reusable workflow or in a workflow triggered by the workflow_dispatch event
+    -  [inputs context](https://docs.github.com/en/actions/learn-github-actions/contexts#inputs-context)
 
