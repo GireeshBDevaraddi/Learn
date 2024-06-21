@@ -15,3 +15,4 @@ jobs:
       - name: Github Context
       - run : |
           echo ${{github.actor}}
+          echo ${{github.ref}}
