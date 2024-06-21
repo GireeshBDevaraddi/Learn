@@ -1,20 +1,16 @@
-on:
-  workflow_dispatch:
-    inputs:
-      build_id:
-        required: true
-        type: string
-      deploy_target:
-        required: true
-        type: string
-      perform_deploy:
-        required: true
-        type: boolean
-
+name: learn-github-actions
+run-name: ${{ github.actor }} is learning GitHub Actions
+on: [push]
 jobs:
-  deploy:
+  check-bats-version:
     runs-on: ubuntu-latest
-    if: ${{ inputs.perform_deploy }}
     steps:
-      - name: Deploy build to target
-        run: echo "Deploying build:${{ inputs.build_id }} to target:${{ inputs.deploy_target }}"
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install -g bats
+      - run: bats -v
+      - run : |
+          echo ${{github.actor}}
+          echo ${{github.ref}}
