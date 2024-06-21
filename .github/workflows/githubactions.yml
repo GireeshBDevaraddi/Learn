@@ -11,8 +11,6 @@ jobs:
           node-version: '20'
       - run: npm install -g bats
       - run: bats -v
-
-      - name: Github Context
       - run : |
           echo ${{github.actor}}
           echo ${{github.ref}}
