@@ -115,3 +115,33 @@
     -  The properties in the inputs context are defined in the workflow file. They are only available in a reusable workflow or in a workflow triggered by the workflow_dispatch event
     -  [inputs context](https://docs.github.com/en/actions/learn-github-actions/contexts#inputs-context)
 
+## Variables
+ - Variables provide a way to store and reuse non-sensitive configuration information. You can store any configuration data such as compiler flags, usernames, or server names as variables. Variables are interpolated on the runner machine that runs your workflow. Commands that run in actions or workflow steps can create, read, and modify variables
+ - You can set a custom variable in two ways.
+   1. To define an environment variable for use in a single workflow, you can use the `env` key in the workflow file
+      - The scope of a custom variable set by this method is limited to the element in which it is defined
+      - The entire workflow, by using `env` at the top level of the workflow file.
+      - The contents of a job within a workflow, by using `jobs.<job_id>.env`.
+      - A specific step within a job, by using `jobs.<job_id>.steps[*].env`.
+   3. To define a configuration variable across multiple workflows, you can define it at the organization, repository, or environment level
+      - When you define configuration variables, they are automatically available in the vars context
+      - ou can use configuration variables to set default values for parameters passed to build tools at an organization level, but then allow repository owners to override these parameters on a case-by-case basis.
+
+- **Configuration variable precedence**
+  - If a variable with the same name exists at multiple levels, the variable at the lowest level takes precedence.
+  - The following rules apply to configuration variable names:
+     - Names can only contain alphanumeric characters ([a-z], [A-Z], [0-9]) or underscores (_). Spaces are not allowed.
+     - Names must not start with the GITHUB_ prefix.
+     - Names must not start with a number.
+     - Names are case insensitive.
+     - Names must be unique at the level they are created at.
+  - Individual variables are limited to 48 KB in size.
+  - You can store up to 1,000 organization variables, 500 variables per repository, and 100 variables per environment.
+  - A workflow created in a repository can access the following number of variables:
+	- Up to 500 repository variables, if the total size of repository variables is less than 256 KB. If the total size of repository variables exceeds 256 KB, only the repository variables that fall below the limit will be available (as sorted alphabetically by variable name).
+	- Up to 1,000 organization variables, if the total combined size of repository and organization variables is less than 256 KB. If the total combined size of organization and repository variables exceeds 256 KB, only the organization variables that fall below that limit will be available (after accounting for repository variables and as sorted alphabetically by variable name).
+	- Up to 100 environment-level variables
+  - Environment-level variables do not count toward the 256 KB total size limit. If you exceed the combined size limit for repository and organization variables and still need additional variables, you can use an environment and define additional variables in the environment.
+
+- **[Workflow Billing and Limits](https://docs.github.com/en/actions/learn-github-actions/usage-limits-billing-and-administration#about-billing-for-github-actions)**
+- 
