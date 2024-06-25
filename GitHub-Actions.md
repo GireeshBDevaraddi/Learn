@@ -144,4 +144,53 @@
   - Environment-level variables do not count toward the 256 KB total size limit. If you exceed the combined size limit for repository and organization variables and still need additional variables, you can use an environment and define additional variables in the environment.
 
 - **[Workflow Billing and Limits](https://docs.github.com/en/actions/learn-github-actions/usage-limits-billing-and-administration#about-billing-for-github-actions)**
-- 
+
+## Workflows
+- A workflow is a configurable automated process that will run one or more jobs
+- Workflows are defined in the .github/workflows directory in a repository, and a repository can have multiple workflows, each of which can perform a different set of tasks.
+- A workflow must contain the following basic components:
+   - One or more events that will trigger the workflow.
+   - One or more jobs, each of which will execute on a runner machine and run a series of one or more steps.
+   - Each step can either run a script that you define or run an action, which is a reusable extension that can simplify your workflow.
+- Workflow triggers are events that cause a workflow to run. These events can be:
+   - Events that occur in your workflow's repository
+   - Events that occur outside of GitHub and trigger a `repository_dispatch` event on GitHub
+   - Scheduled times
+   - Manual
+- By default, the jobs in your workflow all run in parallel at the same time. If you have a job that must only run after another job has completed, you can use the `needs` keyword to create this dependency. If one of the jobs fails, all dependent jobs are skipped; however, if you need the jobs to continue, you can define this using the `if` conditional statement
+- If your job requires a database or cache service, you can use the `services` keyword to create an ephemeral container to host the service; the resulting container is then available to all steps in that job and is removed when the job has completed
+- Each workflow run will use the version of the workflow that is present in the associated commit SHA or Git ref of the event. When a workflow runs, GitHub sets the `GITHUB_SHA` (commit SHA) and `GITHUB_REF` (Git ref) environment variables in the runner environment
+- When you use the repository's `GITHUB_TOKEN` to perform tasks, events triggered by the `GITHUB_TOKEN`, with the exception of `workflow_dispatch` and `repository_dispatch`, will not create a new workflow run. This prevents you from accidentally creating recursive workflow runs.
+- If you specify multiple activity types, only one of those event activity types needs to occur to trigger your workflow. If multiple triggering event activity types for your workflow occur at the same time, multiple workflow runs will be triggered.
+- Use the `branches` filter when you want to include branch name patterns or when you want to both include and exclude branch names patterns. Use the `branches-ignore` filter when you only want to exclude branch name patterns. You cannot use both the `branches` and `branches-ignore` filters for the same event in a workflow
+- If you define both `branches/branches-ignore` and `paths/paths-ignore`, the workflow will only run when both filters are satisfied.
+- You cannot use `branches` and `branches-ignore` to filter the same event in a single workflow. If you want to both include and exclude branch patterns for a single event, use the branches filter along with the `!` character to indicate which branches should be excluded.
+ ```yaml
+  on:
+  pull_request:
+    branches:
+      - 'releases/**'
+      - '!releases/**-alpha'
+  ```
+ - Use the `tags` filter when you want to include tag name patterns or when you want to both include and exclude tag names patterns. Use the `tags-ignore` filter when you only want to exclude tag name patterns. You cannot use both the `tags` and `tags-ignore` filters for the same event in a workflow.
+ - The patterns defined in `branches` and `tags` are evaluated against the Git ref's name
+ - The filter determines if a workflow should run by evaluating the changed files and running them against the `paths-ignore` or `paths` list. If there are no files changed, the workflow will not run.
+ - GitHub generates the list of changed files using `two-dot diffs` for `pushes` and `three-dot diffs` for `pull requests`
+   - `Pull requests`: Three-dot diffs are a comparison between the most recent version of the topic branch and the commit where the topic branch was last synced with the base branch.
+   - `Pushes to existing branches`: A two-dot diff compares the head and base SHAs directly with each other.
+   - `Pushes to new branches`: A two-dot diff against the parent of the ancestor of the deepest commit pushed.
+  
+ - Diffs are limited to 300 files. If there are files changed that aren't matched in the first 300 files returned by the filter, the workflow will not run. You may need to create more specific filters so that the workflow will run automatically.
+ - When using the `workflow_run` event, you can specify what branches the triggering workflow must run on in order to trigger your workflow.
+ - **[Events that Trigger Workflows](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows)**
+ - **[WorkFlow Syntax for workflows](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions)**
+ - You can use workflow commands when running shell commands in a workflow or in an action's code
+   ```bash
+   echo "::workflow-command parameter1={data},parameter2={data}::{command value}"
+   ::debug::{message}
+   echo "::debug::Set the Octocat variable"
+   ::notice file={name},line={line},endLine={endLine},title={title}::{message}
+   ```
+ - A workflow that uses another workflow is referred to as a `caller` workflow. The reusable workflow is a `called` workflow. One `caller` workflow can use multiple `called` workflows. Each `called` workflow is referenced in a single line. The result is that the `caller` workflow file may contain just a few lines of YAML, but may perform a large number of tasks when it's run. When you reuse a workflow, the entire `called` workflow is used, just as if it was part of the `caller` workflow
+ - To cache dependencies for a job, you can use GitHub's `cache` action. The action creates and restores a cache identified by a unique key. Alternatively, if you are caching the package managers listed below, using their respective `setup-*` actions requires minimal configuration and will create and restore dependency caches for you.
+ - 
