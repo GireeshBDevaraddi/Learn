@@ -196,4 +196,28 @@
  - GitHub CLI is preinstalled on all GitHub-hosted runners. For each step that uses GitHub CLI, you must set an environment variable called GH_TOKEN to a token with the required scopes
 
 # Jobs
-- 
+-  A job is a set of _steps_ in a workflow that is executed on the same runner. Each job runs in a runner environment specified by `runs-on`
+-  Use `jobs.<job_id>` to give your job a unique identifier. The key `job_id` is a string and its value is a map of the job's configuration data. You must replace `<job_id>` with a string that is unique to the jobs object. The `<job_id>` must start with a letter or _ and contain only alphanumeric characters, -, or _.
+-  Use `jobs.<job_id>.name` to set a name for the job, which is displayed in the GitHub UI.
+-  Use `jobs.<job_id>.runs-on` to define the type of machine to run the job on.
+-  If you would like to run your workflow on multiple machines, use `jobs.<job_id>.strategy`.
+-  Quotation marks are not required around simple strings like `self-hosted`, but they are required for expressions like  `"${{ inputs.chosen-os }}"`
+-  You can use `runs-on` to target runner groups, so that the job will execute on any runner that is a member of that group
+-  You can use the `jobs.<job_id>.if` conditional to prevent a job from running unless a condition is met. You can use any supported context and expression to create a conditional
+-  The `jobs.<job_id>.if` condition is evaluated before `jobs.<job_id>.strategy.matrix` is applied.
+-  When you use expressions in an `if` conditional, you can, optionally, omit the `${{ }}` expression syntax because GitHub Actions automatically evaluates the `if` conditional as an expression. However, this exception does not apply everywhere.
+-  You must always use the `${{ }}` expression syntax or escape with `'', "", or ()` when the expression starts with `!`, since `!` is reserved notation in YAML format
+  ```yaml
+	if: ${{ ! startsWith(github.ref, 'refs/tags/') }}
+```
+ - A matrix strategy lets you use variables in a single job definition to automatically create multiple job runs that are based on the combinations of the variables.
+ - A matrix will generate a maximum of 256 jobs per workflow run. This limit applies to both GitHub-hosted and self-hosted runners.
+ - Use `jobs.<job_id>.strategy.matrix.include` to expand existing matrix configurations or to add new configurations. The value of `include` is a list of objects.
+ - To remove specific configurations defined in the matrix, use `jobs.<job_id>.strategy.matrix.exclude`. An excluded configuration only has to be a partial match for it to be excluded
+ -  All `include` combinations are processed after `exclude`. This allows you to use `include` to add back combinations that were previously excluded.
+ -  You can control how job failures are handled with `jobs.<job_id>.strategy.fail-fast` and `jobs.<job_id>.continue-on-error`
+ -  `jobs.<job_id>.strategy.fail-fast` applies to the entire matrix. If `jobs.<job_id>.strategy.fail-fast` is set to `true` or its expression evaluates to `true`, GitHub will cancel all in-progress and queued jobs in the matrix if any job in the matrix fails. This property defaults to `true`
+ -  `jobs.<job_id>.continue-on-error` applies to a single job. If `jobs.<job_id>.continue-on-error` is `true`, other jobs in the matrix will continue running even if the job with `jobs.<job_id>.continue-on-error: true` fails.
+ -  You can use `jobs.<job_id>.strategy.fail-fast` and `jobs.<job_id>.continue-on-error` together.
+ -  By default, GitHub will maximize the number of jobs run in parallel depending on runner availability. To set the maximum number of jobs that can run simultaneously when using a matrix job strategy, use `jobs.<job_id>.strategy.max-parallel`
+ -  
