@@ -290,3 +290,5 @@
 - By default, Git automatically removes consecutive newlines. To leave the commit message exactly as you entered it, use the `--cleanup=verbatim` option on your commit
 - **Skip instructions only apply to the `push` and `pull_request` events**
 
+# Build and Test
+- 
