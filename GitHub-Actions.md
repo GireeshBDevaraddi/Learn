@@ -227,4 +227,23 @@
  -  Ordering is not guaranteed for jobs or workflow runs using concurrency groups. Jobs or workflow runs in the same concurrency group are handled in an arbitrary order.
  -  You can also limit the concurrency of jobs within a workflow by using the `concurrency` keyword at the job level
  -  The `concurrency` key is used to group workflows or jobs together into a concurrency group. When you define a `concurrency` key, GitHub Actions ensures that only one workflow or job with that key runs at any given time
- -  
+ -  Use `jobs.<job_id>.container` to create a container to run any steps in a job that don't already specify a container. If you have steps that use both script and container actions, the container actions will run as sibling containers on the same network with the same volume mounts
+ -  If you do not set a `container`, all steps will run directly on the host specified by `runs-on` unless a step refers to an action configured to run in a container.
+ -  The default shell for `run` steps inside a container is `sh` instead of `bash`. This can be overridden with `jobs.<job_id>.defaults.run` or `jobs.<job_id>.steps[*].shell`.
+ -  Use `jobs.<job_id>.container.image` to define the Docker image to use as the container to run the action. The value can be the Docker Hub image name or a registry name
+ -  If the image's container registry requires authentication to pull the image, you can use `jobs.<job_id>.container.credentials` to set a map of the `username` and `password`. The credentials are the same values that you would provide to the `docker login` command.
+ -  Use `jobs.<job_id>.container.env` to set a `map` of environment variables in the container.
+ -  Use `jobs.<job_id>.container.ports` to set an `array` of ports to expose on the container.
+ -  Use `jobs.<job_id>.container.volumes` to set an `array` of volumes for the container to use.
+ -  To specify a volume, you specify the source and destination path:
+	- <source>:<destinationPath>.
+	- <source> is a volume name or an absolute path on the host machine. 
+ 	- <destinationPath> is an absolute path in the container.
+   ```yaml
+	volumes:
+	  - my_docker_volume:/volume_mount
+	  - /data/my_data
+	  - /source/directory:/destination/directory
+   ```
+ - Use `jobs.<job_id>.container.options` to configure additional Docker container resource options
+ - 
