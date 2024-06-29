@@ -279,4 +279,14 @@
 - You can use `jobs.<job_id>.outputs` to create a map of `outputs` for a job. Job outputs are available to all downstream jobs that depend on this job
 - Outputs are Unicode strings, and can be a maximum of 1 MB. The total of all outputs in a workflow run can be a maximum of 50 MB.
 - **`$GITHUB_OUTPUT` is shared between all steps in a job. If you use the same output name in multiple steps, the last step to write to the output will override the value. If your job uses a `matrix` and writes to `$GITHUB_OUTPUT`, the content will be overwritten for each matrix combination. You can use the `matrix` context to create unique output names for each job configuration**
-- 
+
+## Managing Workflow Run
+- Re-running a `workflow` or `jobs` in a workflow uses the same `GITHUB_SHA` (commit SHA) and `GITHUB_REF` (Git ref) of the original event that triggered the workflow run. The workflow will use the privileges of the actor who initially triggered the workflow, not the privileges of the actor who initiated the re-run. You can re-run a workflow or jobs in a workflow for up to `30 days after the initial run`. You cannot re-run jobs in a workflow once its logs have passed their retention limits
+- To cancel the workflow run, the server re-evaluates `if` conditions for all currently running jobs. If the condition evaluates to true, the job will not get canceled.
+- For jobs that need to be canceled, the server sends a cancellation message to all the runner machines with jobs that need to be canceled
+- Workflows that would be triggered using `on: push` or `on: pull_request` won't be triggered if you add any of the following strings to the commit message in a push, or the HEAD commit of a pull request:`[skip ci]` `[ci skip]` `[no ci]` `[skip actions]` `[actions skip]`
+- you can add a `skip-checks` trailer to your commit message
+- The trailers section should be included at the end of your commit message and be proceeded by two empty lines. If you already have other trailers in your commit message, `skip-checks` should be last. You can use either of these : `skip-checks:true` `skip-checks: true`
+- By default, Git automatically removes consecutive newlines. To leave the commit message exactly as you entered it, use the `--cleanup=verbatim` option on your commit
+- **Skip instructions only apply to the `push` and `pull_request` events**
+
