@@ -236,9 +236,9 @@
  -  Use `jobs.<job_id>.container.ports` to set an `array` of ports to expose on the container.
  -  Use `jobs.<job_id>.container.volumes` to set an `array` of volumes for the container to use.
  -  To specify a volume, you specify the source and destination path:
-	- <source>:<destinationPath>.
-	- <source> is a volume name or an absolute path on the host machine. 
- 	- <destinationPath> is an absolute path in the container.
+	-  `<source>:<destinationPath>`
+	-  `<source>` is a volume name or an absolute path on the host machine. 
+ 	-  `<destinationPath>` is an absolute path in the container.
    ```yaml
 	volumes:
 	  - my_docker_volume:/volume_mount
@@ -246,4 +246,37 @@
 	  - /source/directory:/destination/directory
    ```
  - Use `jobs.<job_id>.container.options` to configure additional Docker container resource options
- - 
+ - Use `defaults` to create a map of default settings that will apply to all jobs in the workflow. You can also set default settings that are only available to a job
+ - You can use `defaults.run` to provide default `shell` and `working-directory` options for all run steps in a workflow. You can also set default settings for `run` that are only available to a job
+ ```yaml
+	defaults:
+	  run:
+	    shell: bash
+	    working-directory: ./scripts
+ ```
+- Use `jobs.<job_id>.defaults` to create a map of default settings that will apply to all steps in the job
+- These can be overriden at the `jobs.<job_id>.defaults.run` and `jobs.<job_id>.steps[*].run` levels
+- You can use `permissions` to modify the default permissions granted to the `GITHUB_TOKEN`, adding or removing access as required, so that you only allow the minimum required access
+- You can use `permissions` either as a top-level key, to apply to all jobs in the workflow, or within specific jobs. When you add the `permissions` key within a specific job, all actions and `run` commands within that job that use the `GITHUB_TOKEN` gain the access rights you specify.
+```yaml
+    permissions:
+	actions: read|write|none
+	checks: read|write|none
+	contents: read|write|none
+	deployments: read|write|none
+	id-token: read|write|none
+	issues: read|write|none
+	discussions: read|write|none
+	packages: read|write|none
+	pages: read|write|none
+	pull-requests: read|write|none
+	repository-projects: read|write|none
+	security-events: read|write|none
+	statuses: read|write|none
+```
+- You can use the `permissions: read-all` and permissions: write-all` syntax to define one of `read-all` or `write-all` access for all of the available scopes
+- You can use `permissions: {}` to disable permissions for all of the available scopes
+- You can use `jobs.<job_id>.outputs` to create a map of `outputs` for a job. Job outputs are available to all downstream jobs that depend on this job
+- Outputs are Unicode strings, and can be a maximum of 1 MB. The total of all outputs in a workflow run can be a maximum of 50 MB.
+- **`$GITHUB_OUTPUT` is shared between all steps in a job. If you use the same output name in multiple steps, the last step to write to the output will override the value. If your job uses a `matrix` and writes to `$GITHUB_OUTPUT`, the content will be overwritten for each matrix combination. You can use the `matrix` context to create unique output names for each job configuration**
+- 
