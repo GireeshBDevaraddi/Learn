@@ -17,6 +17,11 @@ jobs:
           echo ${{github.ref}}
 
       - name: test action
+        id: test
       - uses: GireeshBDevaraddi/Akamai-Cache-Purge-Action@4f0e4d8
         with:
           greet-name: "Gireesh Devaraddi"
+      - run: echo random-number "$RANDOM_NUMBER"
+        shell: bash
+        env:
+          RANDOM_NUMBER: ${{ steps.test.outputs.random}}
