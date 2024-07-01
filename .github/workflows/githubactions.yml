@@ -6,6 +6,7 @@ jobs:
   check-bats-version:
     runs-on: ubuntu-latest
     steps:
+      - name: setUp
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
@@ -17,6 +18,7 @@ jobs:
           echo ${{github.ref}}
 
       - name: test action
+      - uses: actions/checkout@v4
         id: test
       - uses: GireeshBDevaraddi/Akamai-Cache-Purge-Action@4f0e4d8
         with:
