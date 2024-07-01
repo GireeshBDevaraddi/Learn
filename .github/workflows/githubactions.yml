@@ -15,3 +15,8 @@ jobs:
       - run : |
           echo ${{github.actor}}
           echo ${{github.ref}}
+
+      - name: test action
+      - uses: GireeshBDevaraddi/Akamai-Cache-Purge-Action@4f0e4d8
+        with:
+          greet-name: "Gireesh Devaraddi"
