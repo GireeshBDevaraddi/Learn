@@ -291,4 +291,44 @@
 - **Skip instructions only apply to the `push` and `pull_request` events**
 
 # Build and Test
-- 
+- CI using GitHub Actions offers workflows that can build the code in your repository and run your tests.
+- When you commit code to your repository, you can continuously build and test the code to make sure that the commit doesn't introduce errors. Your tests can include code linters (which check style formatting), security checks, code coverage, functional tests, and other custom checks
+- Building and testing your code requires a server. You can build and test updates locally before pushing code to a repository, or you can use a CI server that checks for new code commits in a repository.
+
+# Deployment
+- Continuous deployment (CD) is the practice of using automation to publish and deploy software updates. As part of the typical CD process, the code is automatically built and tested before deployment.
+- Continuous deployment is often coupled with continuous integration
+- GitHub Actions offers features that let you control deployments. You can:
+    - Trigger workflows with a variety of events.
+    - Configure environments to set rules before a job can proceed and to limit access to secrets.
+    - Use concurrency to control the number of deployments running at a time
+- Environments are used to describe a general deployment target like production, staging, or development. When a GitHub Actions workflow deploys to an environment, the environment is displayed on the main page of the repository. You can use environments to require approval for a job to proceed, restrict which branches can trigger a workflow, gate deployments with custom deployment protection rules, or limit access to secrets
+
+## Service Containers
+- Service containers are Docker containers that provide a simple and portable way for you to host services that you might need to test or operate your application in a workflow.
+- You can configure service containers for each job in a workflow. GitHub creates a fresh Docker container for each service configured in the workflow, and destroys the service container when the job completes. Steps in a job can communicate with all service containers that are part of the same job. However, you cannot create and use service containers inside a composite action.
+- When running jobs directly on the runner machine, you can access service containers using localhost:<port> or 127.0.0.1:<port>. GitHub configures the container network to enable communication from the service container to the Docker host
+
+## Publish Package
+- A packaging step is a common part of a continuous integration or continuous delivery workflow. Creating a package at the end of a continuous integration workflow can help during code reviews on a pull request
+- After building and testing your code, a packaging step can produce a runnable or deployable artifact. Depending on the kind of application you're building, this package can be downloaded locally for manual testing, made available for users to download, or deployed to a staging or production environment.
+
+# Monitor & Troubleshoot
+- Every workflow run generates a real-time graph that illustrates the run progress. You can use this graph to monitor and debug workflows
+- You can display a status badge in your repository to indicate the status of your workflows
+- You can view the execution time of a job, including the billable minutes that a job accrued.
+- If your workflow run fails, you can see which step caused the failure and review the failed step's build logs to troubleshoot. You can see the time it took for each step to run. You can also copy a permalink to a specific line in the log file to share with your team. Read access to the repository is required to perform these steps.
+- To enable runner diagnostic logging, set the following secret or variable in the repository that contains the workflow: `ACTIONS_RUNNER_DEBUG` to `true`. If both the secret and variable are set, the value of the secret takes precedence over the variable
+- To download runner diagnostic logs, download the log archive of the workflow run. The runner diagnostic logs are contained in the `runner-diagnostic-logs` folder
+- To enable step debug logging, set the following secret or variable in the repository that contains the workflow: `ACTIONS_STEP_DEBUG` to `true`. If both the secret and variable are set, the value of the secret takes precedence over the variable.
+- After setting the secret or variable, more debug events are shown in the step logs
+
+# Security guide
+- There are certain proactive steps and good practices you should follow to help ensure secrets are redacted, and to limit other risks associated with secrets
+   - Never use structured data as a secret like json
+   - Register all secrets used within workflows
+   - Audit how secrets are handled
+   - Use credentials that are minimally scoped
+   - Audit and rotate registered secrets
+   - Consider requiring review for access to secrets
+
