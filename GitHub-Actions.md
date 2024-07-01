@@ -360,4 +360,10 @@
  - [Docker Container Action](https://docs.github.com/en/actions/creating-actions/creating-a-docker-container-action)
  - [JavaScript Action](https://docs.github.com/en/actions/creating-actions/creating-a-javascript-action)
  - [Composite Action](https://docs.github.com/en/actions/creating-actions/creating-a-composite-action)
+ - All actions require a metadata file. The metadata filename must be either `action.yml` or `action.yaml`. The data in the metadata file defines the inputs, outputs, and runs configuration for your action.
+ - **Workflows using `required: true` will not automatically return an error if the input is not specified for events that automatically trigger workflow runs. If you set required: true in your workflow file and are using `workflow_dispatch` to manually run the workflow, you will be required to specify inputs on GitHub**
+ - When you specify an input in a workflow file or use a default input value, GitHub creates an environment variable for the input with the name `INPUT_<VARIABLE_NAME>`. The environment variable created converts input names to uppercase letters and replaces spaces with `_` characters.
+ - If the action is written using a `composite`, then it will not automatically get `INPUT_<VARIABLE_NAME>`. If the conversion doesn't occur, you can change these inputs manually.
+ - To access the environment variable in a Docker container action, you must pass the input using the `args` keyword in the action metadata file
+ - `outputs` use the same parameters as `outputs.<output_id>` and `outputs.<output_id>.description` (see "outputs for Docker container and JavaScript actions"), but also includes the `value` token
  - 
