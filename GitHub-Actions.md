@@ -332,3 +332,32 @@
    - Audit and rotate registered secrets
    - Consider requiring review for access to secrets
 
+# Custom Actions
+- Actions are individual tasks that you can combine to create jobs and customize your workflow. You can create your own actions, or use and customize actions shared by the GitHub community
+- You can create actions by writing custom code that interacts with your repository in any way you'd like, including integrating with GitHub's APIs and any publicly available third-party API
+- You can write your own actions to use in your workflow or share the actions you build with the GitHub community. To share actions you've built with everyone, your repository must be public.
+- Actions can run directly on a machine or in a Docker container. You can define an action's inputs, outputs, and environment variables
+- Types of Actions
+   - Docker Container Actions
+   - JavaScript Actions
+   - Composite Actions
+## Creating Custom Actions
+- If you're developing an action for other people to use, we recommend keeping the action in its own repository instead of bundling it with other application code. This allows you to version, track, and release the action just like any other software
+- If you're building an action that you don't plan to make available to others, you can store the action's files in any location in your repository. If you plan to combine action, workflow, and application code in a single repository, we recommend storing actions in the `.github` directory. For example, `.github/actions/action-a` and `.github/actions/action-b`
+- To ensure that your action is compatible with GitHub Enterprise Server, you should make sure that you do not use any hard-coded references to GitHub API URLs. You should instead use environment variables
+  - For the REST API, use the GITHUB_API_URL environment variable.
+  - For GraphQL, use the GITHUB_GRAPHQL_URL environment variable.
+- If you're developing an action for other people to use, we recommend using release management
+- We recommend using tags for actions release management. Using this approach, your users can easily distinguish between major and minor versions
+- Your action's users might prefer to rely on a commit's SHA value, as this approach can be more reliable than specifying a tag, which could be deleted or moved
+- We recommend creating a README file to help people learn how to use your action. You can include this information in your README.md:
+    - A detailed description of what the action does
+    - Required input and output arguments
+    - Optional input and output arguments
+    - Secrets the action uses
+    - Environment variables the action uses
+    - An example of how to use your action in a workflow
+ - [Docker Container Action](https://docs.github.com/en/actions/creating-actions/creating-a-docker-container-action)
+ - [JavaScript Action](https://docs.github.com/en/actions/creating-actions/creating-a-javascript-action)
+ - [Composite Action](https://docs.github.com/en/actions/creating-actions/creating-a-composite-action)
+ - 
