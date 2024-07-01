@@ -3,27 +3,16 @@ run-name: ${{ github.actor }} is learning GitHub Actions
 on: 
   workflow_dispatch:
 jobs:
-  check-bats-version:
+  hello_world_job:
     runs-on: ubuntu-latest
+    name: A job to say hello
     steps:
-      - name: setUp
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - id: foo
+        uses: GireeshBDevaraddi/Akamai-Cache-Purge-Action@4f0e4d8
         with:
-          node-version: '20'
-      - run: npm install -g bats
-      - run: bats -v
-      - run : |
-          echo ${{github.actor}}
-          echo ${{github.ref}}
-
-      - name: test action
-      - uses: actions/checkout@v4
-        id: test
-      - uses: GireeshBDevaraddi/Akamai-Cache-Purge-Action@4f0e4d8
-        with:
-          greet-name: "Gireesh Devaraddi"
+          who-to-greet: 'Mona the Octocat'
       - run: echo random-number "$RANDOM_NUMBER"
         shell: bash
         env:
-          RANDOM_NUMBER: ${{ steps.test.outputs.random}}
+          RANDOM_NUMBER: ${{ steps.foo.outputs.random}}
