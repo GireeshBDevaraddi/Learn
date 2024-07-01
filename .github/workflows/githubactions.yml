@@ -8,11 +8,11 @@ jobs:
     name: A job to say hello
     steps:
       - uses: actions/checkout@v4
-      - id: foo
+      - id: test
         uses: GireeshBDevaraddi/Akamai-Cache-Purge-Action@4f0e4d8aa905a70ec27ff8ead8499b24660b2982
         with:
-          who-to-greet: 'Mona the Octocat'
+          greet-name: 'Github Actions'
       - run: echo random-number "$RANDOM_NUMBER"
         shell: bash
         env:
-          RANDOM_NUMBER: ${{ steps.foo.outputs.random}}
+          RANDOM_NUMBER: ${{ steps.test.outputs.random}}
