@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - id: foo
-        uses: GireeshBDevaraddi/Akamai-Cache-Purge-Action@4f0e4d8
+        uses: GireeshBDevaraddi/Akamai-Cache-Purge-Action@4f0e4d8aa905a70ec27ff8ead8499b24660b2982
         with:
           who-to-greet: 'Mona the Octocat'
       - run: echo random-number "$RANDOM_NUMBER"
