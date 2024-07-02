@@ -5,11 +5,9 @@ on:
 jobs:
   install:
     runs-on: ubuntu-latest
-    name: A job to say hello
+    name: Install
     steps:
-      - name : "Install Akamai"
-        uses: tecolicom/actions-use-homebrew-tools@v1
-        with:
-          tools: akamai
-          
+      - name: "Install Akamai"
+        run: brew install akamai
+        shell: bash  
     
