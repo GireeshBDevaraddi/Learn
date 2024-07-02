@@ -366,4 +366,7 @@
  - If the action is written using a `composite`, then it will not automatically get `INPUT_<VARIABLE_NAME>`. If the conversion doesn't occur, you can change these inputs manually.
  - To access the environment variable in a Docker container action, you must pass the input using the `args` keyword in the action metadata file
  - `outputs` use the same parameters as `outputs.<output_id>` and `outputs.<output_id>.description` (see "outputs for Docker container and JavaScript actions"), but also includes the `value` token
- - 
+   
+ - When creating a `Dockerfile` for a Docker container action, you should be aware of how some Docker instructions interact with GitHub Actions and an action's metadata file
+- A `Dockerfile` contains instructions and arguments that define the contents and startup behavior of a Docker container
+- 
