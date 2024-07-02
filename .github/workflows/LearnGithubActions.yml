@@ -7,6 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     name: Install
     steps:
+      - name: "Install Brew"
+        run: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        shell: bash
+      
       - name: "Install Akamai"
         run: brew install akamai
         shell: bash  
