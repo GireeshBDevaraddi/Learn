@@ -19,5 +19,13 @@ jobs:
 
       - name: "Install Akamai"
         run: /home/linuxbrew/.linuxbrew/bin/brew install akamai
-        shell: bash 
+        shell: bash
+        
+      - name: "Install Akamai Purge"
+        run: akamai install purge
+        shell: bash
+
+      - name: "Do Akamai Purge"
+        run: akamai purge
+        shell: bash
     
