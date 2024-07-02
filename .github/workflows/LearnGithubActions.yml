@@ -18,6 +18,6 @@ jobs:
         shell: bash
 
       - name: "Install Akamai"
-        run: brew install akamai
+        run: /home/linuxbrew/.linuxbrew/bin/brew install akamai
         shell: bash 
     
